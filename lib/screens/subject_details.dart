@@ -246,7 +246,13 @@ class _SubjectDetailsState extends State<SubjectDetails> {
                   keyboardType: TextInputType.multiline,
                   minLines: 1,
                   maxLines: 7,
-                  decoration: const InputDecoration(labelText: 'Note'),
+                  decoration: const InputDecoration(
+                    constraints: BoxConstraints(maxHeight: double.infinity),
+                    labelText: 'Note',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    ),
+                  ),
                 ),
                 const Padding(padding: EdgeInsets.all(10)),
                 ElevatedButton(

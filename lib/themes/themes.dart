@@ -48,7 +48,9 @@ class Themes {
   );
 
   static InputDecorationTheme inputDecorationTheme = const InputDecorationTheme(
-    //constraints: BoxConstraints(maxHeight: 50),  => this makes the textfield a bit more nice
+    constraints: BoxConstraints(maxHeight: 50),
+    contentPadding: EdgeInsets.symmetric(horizontal: 10),
+    //  this makes the textfield a bit more nice
     border: OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(10.0)),
     ),

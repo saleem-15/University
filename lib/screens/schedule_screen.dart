@@ -1,10 +1,9 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import '../models/lecture.dart';
 import '../models/subject.dart';
-// ignore: unused_import
-import 'subjects_screen.dart';
 
 class Schedule extends StatefulWidget {
   const Schedule({Key? key}) : super(key: key);
@@ -15,6 +14,7 @@ class Schedule extends StatefulWidget {
 
 class _ScheduleState extends State<Schedule> {
   var numberOfLectureToBeDeleted = TextEditingController();
+  var importTableStringController = TextEditingController();
   @override
   Widget build(BuildContext mainContext) {
     return Scaffold(
@@ -25,18 +25,34 @@ class _ScheduleState extends State<Schedule> {
               onSelected: (value) {
                 if (value == 1) {
                   showDeleteLectureDialog(context);
+                } else if (value == 2) {
+                  showImportTableDialog(context);
+                } else if (value == 3) {
+                  Clipboard.setData(ClipboardData(text: exportTableAsString()));
+                  Fluttertoast.showToast(
+                    msg: "Table data is copied to clipboard!",
+                    toastLength: Toast.LENGTH_LONG,
+                  );
                 }
               },
-              itemBuilder: (ctx) => [
+              itemBuilder: (ctx) => const [
                     PopupMenuItem(
-                      child: const Text("احذف موعد"),
+                      child: Text("احذف موعد"),
                       value: 1,
+                    ),
+                    PopupMenuItem(
+                      child: Text("Import table"),
+                      value: 2,
+                    ),
+                    PopupMenuItem(
+                      child: Text("Export table"),
+                      value: 3,
                     ),
                   ]),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
         onPressed: () => showAddNewSubjectDialog(context),
       ),
       body: SingleChildScrollView(
@@ -45,7 +61,7 @@ class _ScheduleState extends State<Schedule> {
             FittedBox(
               // fit: BoxFit.none,
               child: DataTable(
-                columns: [
+                columns: const [
                   DataColumn(
                     label: Text(
                       'القاعة',
@@ -78,25 +94,25 @@ class _ScheduleState extends State<Schedule> {
                       DataCell(
                         Text(
                           e.place,
-                          style: TextStyle(fontSize: 22),
+                          style: const TextStyle(fontSize: 22),
                         ),
                       ),
                       DataCell(
                         Text(
                           e.subject,
-                          style: TextStyle(fontSize: 22),
+                          style: const TextStyle(fontSize: 22),
                         ),
                       ),
                       DataCell(
                         Text(
                           '${e.startingTime}-${e.endingTime}',
-                          style: TextStyle(fontSize: 22),
+                          style: const TextStyle(fontSize: 22),
                         ),
                       ),
                       DataCell(
                         Text(
                           e.day,
-                          style: TextStyle(fontSize: 22),
+                          style: const TextStyle(fontSize: 22),
                         ),
                       ),
                     ],
@@ -112,11 +128,8 @@ class _ScheduleState extends State<Schedule> {
 
   String dropdownDay = 'السبت';
   String? dropdownSubject;
-  //  = Subject.subjectsList[0].name;
   String? dropDownStartingTime;
-  //= startingTime[0];
   String? dropDownEndingTime;
-  // = endingTime[0];
 
   final days = ['السبت', 'الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس'];
   static const startingTime = ['8', '9', '10', '11', '12', '1', '2'];
@@ -135,7 +148,7 @@ class _ScheduleState extends State<Schedule> {
         builder: (ctx) {
           return AlertDialog(
             scrollable: true,
-            title: Text(
+            title: const Text(
               'أضف موعد جديد',
               textDirection: TextDirection.rtl,
             ),
@@ -144,13 +157,13 @@ class _ScheduleState extends State<Schedule> {
                 padding: const EdgeInsets.all(8.0),
                 child: Form(
                   child: Container(
-                    margin: EdgeInsets.only(left: 10),
+                    margin: const EdgeInsets.only(left: 10),
                     child: Column(
                       children: <Widget>[
                         Container(
                           //subject drop down
                           height: 45,
-                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(
@@ -161,7 +174,7 @@ class _ScheduleState extends State<Schedule> {
                           child: DropdownButtonHideUnderline(
                             child: DropdownButton(
                               isExpanded: true,
-                              hint: Text('المادة'),
+                              hint: const Text('المادة'),
                               value: dropdownSubject,
                               elevation: 16,
                               onChanged: (String? newValue) => setState(() {
@@ -179,11 +192,9 @@ class _ScheduleState extends State<Schedule> {
                         ),
                         Container(
                           //day drop down
-                          margin: EdgeInsets.only(
-                            top: 15,
-                          ),
+                          margin: const EdgeInsets.only(top: 15),
                           height: 45,
-                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(
@@ -214,9 +225,11 @@ class _ScheduleState extends State<Schedule> {
                               //ending time dropDown
                               flex: 1,
                               child: Container(
-                                margin: EdgeInsets.only(top: 15, right: 10),
+                                margin:
+                                    const EdgeInsets.only(top: 15, right: 10),
                                 height: 45,
-                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(
@@ -226,7 +239,7 @@ class _ScheduleState extends State<Schedule> {
                                 ),
                                 child: DropdownButtonHideUnderline(
                                   child: DropdownButton<String>(
-                                    hint: Text('الى'),
+                                    hint: const Text('الى'),
                                     isExpanded: true,
                                     value: dropDownEndingTime,
                                     elevation: 16,
@@ -248,9 +261,11 @@ class _ScheduleState extends State<Schedule> {
                               //starting time dropDown
                               flex: 1,
                               child: Container(
-                                margin: EdgeInsets.only(top: 15, left: 10),
+                                margin:
+                                    const EdgeInsets.only(top: 15, left: 10),
                                 height: 45,
-                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(
@@ -260,7 +275,7 @@ class _ScheduleState extends State<Schedule> {
                                 ),
                                 child: DropdownButtonHideUnderline(
                                   child: DropdownButton<String>(
-                                    hint: Text('من'),
+                                    hint: const Text('من'),
                                     isExpanded: true,
                                     value: dropDownStartingTime,
                                     elevation: 16,
@@ -281,9 +296,7 @@ class _ScheduleState extends State<Schedule> {
                           ],
                         ),
                         Container(
-                          margin: EdgeInsets.only(
-                            top: 15,
-                          ),
+                          margin: const EdgeInsets.only(top: 15),
                           height: 45,
                           // padding: EdgeInsets.symmetric(horizontal: 5),
                           child: TextField(
@@ -300,14 +313,14 @@ class _ScheduleState extends State<Schedule> {
             ),
             actions: [
               TextButton(
-                child: Text(
+                child: const Text(
                   'إلغاء',
                   style: TextStyle(fontSize: 18),
                 ),
                 onPressed: () => Navigator.of(context).pop(),
               ),
               TextButton(
-                child: Text(
+                child: const Text(
                   "أضف الموعد",
                   style: TextStyle(fontSize: 18),
                 ),
@@ -359,23 +372,24 @@ class _ScheduleState extends State<Schedule> {
         builder: (context) {
           return AlertDialog(
             content: SizedBox(
-              height: 100,
+              height: 110,
               child: Column(
                 children: [
                   TextField(
                     controller: numberOfLectureToBeDeleted,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                         hintText: 'ادخل رقم السطر اللي بدك تحذفه'),
                     keyboardType: TextInputType.number,
                   ),
+                  const Padding(padding: EdgeInsets.all(5)),
                   ElevatedButton(
                     onPressed: () {
                       Lecture.deleteLectureAtNumber(
                           int.parse(numberOfLectureToBeDeleted.text));
                       setState(() {});
-                      Navigator.of(context).pop();
+                      //Navigator.of(context).pop();
                     },
-                    child: Text('Delete'),
+                    child: const Text('Delete'),
                   ),
                 ],
               ),
@@ -383,53 +397,135 @@ class _ScheduleState extends State<Schedule> {
           );
         });
   }
-}
-    // Table(
-    //   border: TableBorder.all(),
-    //   children: [
-    //     TableRow(children: [
-    //       Column(
-    //         children: const [Text('Day')], //the name of the day is in a column
-    //       ),
-    //       Column(
-    //         // the time and date of the lectures is stored as (Column of Rows)
-    //         children: [
-    //           Row(
-    //             children: [Text('Date'), Text('subjectName'), Text('place')],
-    //           ),
-    //         ],
-    //       )
-    //     ])
-    //   ],
-    // );
 
-    // Flexible(
-                          //   flex: 1,
-                          //   child: Padding(
-                          //     padding: const EdgeInsets.only(right: 4),
-                          //     child: DropdownButton(
-                          //       child: TextFormField(
-                          //         controller: endingTimeInput,
-                          //         keyboardType: TextInputType.number,
-                          //         decoration: InputDecoration(
-                          //           labelText: 'الى',
-                          //         ),
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
-                          // Flexible(
-                          //   flex: 1,
-                          //   child: Padding(
-                          //     padding: const EdgeInsets.only(left: 4),
-                          //     child: DropdownButton<String>(
-                          //       child: TextFormField(
-                          //         controller: startingTimeInput,
-                          //         keyboardType: TextInputType.number,
-                          //         decoration: InputDecoration(
-                          //           labelText: 'من',
-                          //         ),
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
+  String exportTableAsString() {
+    final lectures = Hive.box<Lecture>('LecturesBox').values.toList();
+
+    String exportedTable = '[';
+
+    // starts with "["
+    //between each variable "*" is placed between
+    //between each lecture "//" is placed btween
+
+    for (var item in lectures) {
+      exportedTable = exportedTable +
+          item.day +
+          "*" +
+          item.startingTime +
+          "*" +
+          item.endingTime +
+          "*" +
+          item.subject +
+          "*" +
+          item.place +
+          "//";
+    }
+
+    return exportedTable;
+  }
+
+  void importTableAsString(String table) {
+    var importedTable = table;
+
+    if (!importedTable.contains('[') ||
+        !importedTable.contains('//') ||
+        importedTable.split('*').length < 5) {
+      // a valid table string must contain at least 4 '*' => which when splitting using '*' we must have 5 elements
+      Fluttertoast.showToast(
+          msg: "This is not a valid table !!", toastLength: Toast.LENGTH_LONG);
+      return;
+      // if one of the conditions is true then display a msg and get out of the method
+    }
+
+    /*delete the first "[" and last "//" 
+    lecture..data // lecture..data//  (nothing here)
+    when deleting the last "//"  =>  lecture..data // lecture..data => when splitting the string becomes 2 elements not 3
+  */
+    importedTable = importedTable.substring(1, importedTable.length - 2);
+
+    var listOfLectureString = importedTable.split('//');
+    // splits the string when it finds '//' (seperate lectures from one another)
+
+    late String subject;
+    late String day;
+    late String startingTime;
+    late String endingTime;
+    late String place;
+
+    for (var lecture in listOfLectureString) {
+      // loop for every lecture
+      final lectureFields = lecture.split('*');
+
+      for (int i = 0; i < lectureFields.length; i++) {
+        // loop for every field in lecture (5 times)
+        // here we assign the fields of the lecture to the local variables
+
+        switch (i) {
+          case 0:
+            day = lectureFields[0];
+            break;
+
+          case 1:
+            startingTime = lectureFields[1];
+            break;
+
+          case 2:
+            endingTime = lectureFields[2];
+            break;
+
+          case 3:
+            subject = lectureFields[3];
+            break;
+
+          case 4:
+            place = lectureFields[4];
+            break;
+        }
+      }
+
+      Lecture.addLecture(Lecture(
+          subject: subject,
+          day: day,
+          startingTime: startingTime,
+          endingTime: endingTime,
+          place: place));
+    }
+  }
+
+  void showImportTableDialog(BuildContext ctx) {
+    showDialog(
+      context: ctx,
+      builder: (ctx) {
+        return AlertDialog(
+          title: const Text('Import table'),
+          content: SizedBox(
+            height: 120,
+            child: Column(
+              children: [
+                TextField(
+                  controller: importTableStringController,
+                  decoration: const InputDecoration(
+                      //constraints: BoxConstraints(),
+                      labelText: 'Table string',
+                      hintText: 'أدخل النص اللي أخدتو من غيرك هان'),
+                ),
+                const Padding(padding: EdgeInsets.all(10)),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+
+                    setState(() {
+                      importTableAsString(importTableStringController.text);
+                    });
+                    importTableStringController.clear();
+                  },
+                  child: const Text('Import the table'),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
