@@ -1,6 +1,6 @@
 import 'package:hive/hive.dart';
 
-part 'link.g.dart';
+part 'adapters/link.g.dart';
 
 @HiveType(typeId: 3)
 class Link {

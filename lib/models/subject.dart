@@ -8,7 +8,7 @@ import 'note.dart';
 /*
 to store any kind of objects you need to write in the file (part 'file_name.g.dart')  
   the file that has the class that we want to save its data */
-part 'subject.g.dart';
+part 'adapters/subject.g.dart';
 
 @HiveType(typeId: 2)
 class Subject extends HiveObject {

@@ -19,34 +19,41 @@ class _NotesScreenState extends State<NotesScreen> {
         title: const Text('Notes'),
       ),
       body: SizedBox(
-        height: 400,
-        child: ListView(
-          children: widget.subject.notes.map((e) {
-            return Card(
-              margin: const EdgeInsets.only(top: 20),
-              child: Padding(
-                padding: const EdgeInsets.all(5),
-                child: ListTile(
-                  title: Text(
-                    e.title,
-                    style: const TextStyle(fontSize: 22),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => NoteDetailsScreen(
-                              note: e, subject: widget.subject)),
-                    ).then((value) {
-                      //this code [then(){...} ] makes sure when we get back to this page ,its refreshed
-                      setState(() {});
-                    });
-                  },
+        height: MediaQuery.of(context).size.height - 56,
+        child: widget.subject.notes.isEmpty
+            ? const Center(
+                child: Text(
+                  'لا توجد أي ملاحظات',
+                  style: TextStyle(fontSize: 24),
                 ),
+              )
+            : ListView(
+                children: widget.subject.notes.map((e) {
+                  return Card(
+                    margin: const EdgeInsets.only(top: 20),
+                    child: Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: ListTile(
+                        title: Text(
+                          e.title,
+                          style: const TextStyle(fontSize: 22),
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => NoteDetailsScreen(
+                                    note: e, subject: widget.subject)),
+                          ).then((value) {
+                            //this code [then(){...} ] makes sure when we get back to this page ,its refreshed
+                            setState(() {});
+                          });
+                        },
+                      ),
+                    ),
+                  );
+                }).toList(),
               ),
-            );
-          }).toList(),
-        ),
       ),
     );
   }

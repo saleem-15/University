@@ -1,6 +1,6 @@
 import 'package:hive/hive.dart';
 
-part 'note.g.dart';
+part 'adapters/note.g.dart';
 
 @HiveType(typeId: 4)
 class Note {

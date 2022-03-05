@@ -18,34 +18,41 @@ class _LinksScreenState extends State<LinksScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Links')),
       body: SizedBox(
-        height: 300,
-        child: ListView(
-          children: widget.subject.links.map((e) {
-            return Card(
-              margin: const EdgeInsets.only(top: 20),
-              // elevation: Themes.lightTheme.cardTheme.elevation,
-              child: Padding(
-                padding: const EdgeInsets.all(5),
-                child: ListTile(
-                  title: Text(
-                    e.description,
-                    style: const TextStyle(fontSize: 22),
-                  ),
-                  trailing: IconButton(
-                    onPressed: () => showDeleteLink(context, e),
-                    icon: const Icon(
-                      Icons.delete,
-                      color: Colors.orange,
-                    ),
-                  ),
-                  onTap: () {
-                    _launchURL(e.url);
-                  },
+        height: MediaQuery.of(context).size.height - 56,
+        child: widget.subject.links.isEmpty
+            ? const Center(
+                child: Text(
+                  'لا يوجد أي روابط',
+                  style: TextStyle(fontSize: 24),
                 ),
+              )
+            : ListView(
+                children: widget.subject.links.map((e) {
+                  return Card(
+                    margin: const EdgeInsets.only(top: 20),
+                    // elevation: Themes.lightTheme.cardTheme.elevation,
+                    child: Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: ListTile(
+                        title: Text(
+                          e.description,
+                          style: const TextStyle(fontSize: 22),
+                        ),
+                        trailing: IconButton(
+                          onPressed: () => showDeleteLinkDialog(context, e),
+                          icon: const Icon(
+                            Icons.delete,
+                            color: Colors.orange,
+                          ),
+                        ),
+                        onTap: () {
+                          _launchURL(e.url);
+                        },
+                      ),
+                    ),
+                  );
+                }).toList(),
               ),
-            );
-          }).toList(),
-        ),
       ),
     );
   }
@@ -54,12 +61,12 @@ class _LinksScreenState extends State<LinksScreen> {
     if (!await launch(url)) throw 'Could not launch Url';
   }
 
-  void showDeleteLink(BuildContext ctx, Link link) {
+  void showDeleteLinkDialog(BuildContext ctx, Link link) {
     showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: const Text('Are You sure you want to delete this link'),
+            title: const Text('Are You sure you want to delete this link?'),
             actions: [
               TextButton(
                   onPressed: () => Navigator.of(context).pop(),

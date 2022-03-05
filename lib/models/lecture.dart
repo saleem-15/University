@@ -2,7 +2,7 @@ import 'package:hive/hive.dart';
 
 import '../main.dart';
 
-part 'lecture.g.dart';
+part 'adapters/lecture.g.dart';
 
 @HiveType(typeId: 1)
 class Lecture {
